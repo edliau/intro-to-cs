@@ -65,7 +65,7 @@ Exception: Division_by_zero.
 
 (* Solution to Question 02 *)
 
-let f x y = x+y;;
+let f x y = an_int (an_int 3 + an_int x) + an_int y;;
 
 (*
 # a_function f (an_int 1) (an_int 2);;
