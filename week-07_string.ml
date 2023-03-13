@@ -33,23 +33,6 @@ let string_append s1 s2 =
 
 let () = assert (test_string_append string_append = true);;
 
-(* Food for thought: APPLY THIS IDEA TO ALL OTHER FUNCTIONS THAT HAS TRACING PROBLEM 
-let traced_string_length s =
-  let () = Printf.printf "string_length \"%s\"\n" s in
-  String.length s;;
-
-let traced_string_append s1 s2 =
-  let n1 = traced_string_length s1
-  in String.init
-       (n1 + traced_string_length s2)
-       (fun i ->
-         if i < n1
-         then s1.[i]
-         else s2.[i - n1]);;
-
-         traced_string_append "abc" "def";;
- *)
-
 (* ********** *)
 
 (* Question 02 *)
@@ -79,23 +62,45 @@ let () = assert (test_warmup warmup_alt = true);;
 (* Question 03a *)
 (* Tracing identity function from the underlying determininism of Ocaml *)
 let a_char c =
-  let () = Printf.printf "processing %c... \n" c in
+  let () = Printf.printf "processing '%c'... \n" c in
   c;;
 
-String.map a_char "abc";;
+(*
+  String.map a_char "abc";;
+
+processing 'a'... 
+processing 'b'... 
+processing 'c'... 
+- : string = "abc"
+ *)
+
+(* 
+let string_map f s =
+  let rec visit i =
+    if i = 0
+    then ""
+    else let i' = pred i
+         in let ih = visit i'
+            in ih ^ string_of_char (f (s.[i']))
+  in visit (String.length s);;
+ *)
 
 (* Question 03b *)
 let random_char () =
   char_of_int (Random.int 32 + int_of_char ' ');;
 
+(* Unit Test for String Map *)
 let test_string_map candidate =
   let b0 = (candidate (fun a -> a) "abc" = "abc")
   and b1 = (candidate (fun b -> b) "" = "")
   and b2 = (candidate (fun c -> 'a') "alltoa" = "aaaaaa")
   and br = (let n = Random.int 1000 in
             candidate (fun c -> 'b') (String.make n (random_char())) = (String.make n 'b'))
-  in b0 && b1 && b2 && br;;
-                     
+            in b0 && b1 && b2 && br;;
+
+let string_of_char c =
+  String.make 1 c;;
+
 let string_map_up f s =
   let rec visit i =
     if i = 0
@@ -107,24 +112,34 @@ let string_map_up f s =
 
 let () = assert (test_string_map string_map_up = true);;
 
-(* Question 3c *)
-let string_map_down f s =
-  let rec visit i =
-    if i = String.length s
-    then ""
-    else let i' = succ i
-         in let ih = visit i'
-            in string_of_char(f(s.[i' - 1])) ^ ih
-  in visit 0;;
+(* Question 03c *)
 
+let string_map_down f s =
+  let n = String.length s
+     in let rec visit i =
+          if i = n
+          then ""
+          else let i' = succ i
+               in let ih = visit i'
+                  in (string_of_char(f(s.[i' - 1]))) ^ ih
+        in visit 0;;
+ 
 let () = assert (test_string_map string_map_down = true);;
 
 (* ********** *)
 
 (* Question 04a *)
-(* String.mapi (fun i _ -> char_of_int (i + int_of_char '0')) "abc";; *)
 let string_mapi_trace f s=
-  String.mapi (fun i _ -> a_char (char_of_int(i + int_of_char '0'))) "abc";;
+  String.mapi (fun i _ -> a_char (char_of_int(i + int_of_char '0'))) s;;
+
+(*
+  # string_mapi_trace (fun c -> c) "abc";;
+processing '0'... 
+processing '1'... 
+processing '2'... 
+- : string = "012"
+#
+*)
                                                          
 (* Question 04b *)
 let string_mapi_up f s =
@@ -133,10 +148,18 @@ let string_mapi_up f s =
     then ""
     else let i' = pred i
          in let ih = visit i'
-            in ih ^ string_of_char(f i s.[i'])
+            in ih ^ string_of_char(a_char(f i s.[i']))
   in visit (String.length s);;
 
-string_mapi_up (fun i _ -> (char_of_int(i + int_of_char '0' - 1))) "abc";;
+(*
+string_mapi_up (fun i _ -> char_of_int (i + int_of_char '0' - 1)) "abc";;
+  val string_mapi_up : (int -> char -> char) -> string -> string = <fun>
+processing '0'... 
+processing '1'... 
+processing '2'... 
+- : string = "012"
+*)
+
                                                          
 (* Question 04c *)
 let string_mapi_down f s =
@@ -145,32 +168,48 @@ let string_mapi_down f s =
     then ""
     else let i' = succ i
          in let ih = visit i'
-            in string_of_char(f i s.[i' - 1]) ^ ih
+            in string_of_char(a_char(f i s.[i' - 1])) ^ ih 
   in visit 0;;
 
-string_mapi_down (fun i _ -> (char_of_int(i + int_of_char '0' - 1))) "abc";;
+(*
+string_mapi_down (fun i _ -> char_of_int (i + int_of_char '0')) "abc";;
+al string_mapi_down : (int -> char -> char) -> string -> string = <fun>
+processing '2'... 
+processing '1'... 
+processing '0'... 
+- : string = "012"
+*)
 
 (* ********** *)
 
 (* Question 05a: reverse string using String.mapi *)
 let string_reverse_gen s =
   String.mapi (fun i _ -> s.[String.length s - i - 1]) s;;
-                                                                                        
-string_reverse_gen "abc";;
 
-(* Question 05b: reverse string using recursion over non-negative integer *)
+(*
+string_reverse_gen "abc";;
+val string_reverse_gen : string -> string = <fun>
+- : string = "cba"
+ *)
+
+(* Question 05b *)
+  
 let string_reverse_rec s =
-  let n1 = String.length s in
-  let () = assert (n1 >= 0) in
+  let n = String.length s in
+  let () = assert (n >= 0) in
   let rec visit i =
-    if i = n1
+    if i = n
     then ""
     else let i' = succ i
          in let ih = visit i'
             in ih ^ string_of_char(s.[i])
 in visit 0;;
 
+(*
 string_reverse_rec "abc";;
+val string_reverse_rec : string -> string = <fun>
+- : string = "cba"
+*)
 
 let random_char () =
   char_of_int (Random.int 32 + int_of_char ' ');;
@@ -199,7 +238,13 @@ let nat_parafold_right zero_case succ_case n =
 let string_reverse_parafold s =
   nat_parafold_right "" (fun i ih ->  string_of_char(a_char(s.[i])) ^ ih) (String.length s);;
 
+(*
 string_reverse_parafold "abc";;
+val string_reverse_parafold : string -> string = <fun>
+processing 'a'... 
+processing 'b'... 
+processing 'c'... 
+*)
 
 (* ********** *)
 
@@ -223,20 +268,48 @@ let make_palindrome n =
   if (n mod 2) = 0 (* n is an even number *)
   then half ^ (string_reverse_gen(half))
   else half ^ (string_of_char (random_char())) ^ (string_reverse_gen(half));; (* n is an odd number; remember ocaml rounds the number down, for example, 3/2 = 1 *)
+ 
+let make_palindrome_rec n =
+  let () = assert (n >= 0) in
+  if n = 0
+  then ""
+  else if n = 1
+  then String.make 1 (random_char())
+  else if n mod 2 = 0
+  then let half_even =
+         let rec visit_even i =
+                   if i = 0
+                   then ""
+                   else let i' = pred i
+                        in let ih = visit_even i'
+                           in ih ^ String.make 1 (random_char())
+         in visit_even (n/2)
+       in half_even ^ string_reverse_gen (half_even)
+  else let half_odd =
+         let rec visit_odd i =
+                   if i = 0
+                   then ""
+                   else let i' = pred i
+                        in let ih = visit_odd i'
+                           in ih ^ String.make 1 (random_char())
+         in visit_odd ((n-1)/2)
+in half_odd ^ String.make 1 (random_char()) ^ string_reverse_gen (half_odd)
 
 (* ********** *)
 
 (* Question 08 *)
 let palindrome_test candidate =
-  let b0 = (candidate "aba" = true)
-  and b1 = (candidate "abcdcba" = true)
-  and b2 = (candidate "12345" = false)
-  and b3 = (candidate "randomstring" = false)
-  and b4 = (let a = String.make 1 (random_char())
+  let b0 = (candidate "" = true)
+  and b1 = (candidate "ab" = false)
+  and b2 = (candidate "aba" = true)
+  and b3 = (candidate "abba" = true)
+  and b4 = (candidate "abcba" = true)
+  and b5 = (candidate "notpalindrome" = false)
+  and b6 = (let a = String.make 1 (random_char())
             and b = String.make 1 (random_char())
             and c = String.make 1 (random_char())
             in candidate (a^b^c^b^a) = true)
-  in b0 && b1 && b2 && b3 && b4;;
+  in b0 && b1 && b2 && b3 && b4 && b5 && b6;;
 
 let palindromep_mapi s =
   let n = String.length s in
@@ -287,7 +360,7 @@ let end_of_file = "week-07_string.ml";;
 
 (*
   OCaml version 4.14.0
-  Enter #help;; for help.
+Enter #help;; for help.
 
 # #use "week-07_string.ml";;
 val test_string_append : (string -> string -> string) -> bool = <fun>
@@ -297,32 +370,21 @@ val string_of_char : char -> string = <fun>
 val warmup : char -> char -> char -> string = <fun>
 val warmup_alt : char -> char -> char -> string = <fun>
 val a_char : char -> char = <fun>
-processing a... 
-processing b... 
-processing c... 
-- : string = "abc"
 val random_char : unit -> char = <fun>
 val test_string_map : ((char -> char) -> string -> string) -> bool = <fun>
+val string_of_char : char -> string = <fun>
 val string_map_up : (char -> char) -> string -> string = <fun>
 val string_map_down : (char -> char) -> string -> string = <fun>
-val string_mapi_trace : 'a -> 'b -> string = <fun>
+val string_mapi_trace : 'a -> string -> string = <fun>
 val string_mapi_up : (int -> char -> char) -> string -> string = <fun>
-- : string = "012"
 val string_mapi_down : (int -> char -> char) -> string -> string = <fun>
-- : string = "/01"
 val string_reverse_gen : string -> string = <fun>
-- : string = "cba"
 val string_reverse_rec : string -> string = <fun>
-- : string = "cba"
 val random_char : unit -> char = <fun>
 - : bool = true
 - : bool = true
 val nat_parafold_right : 'a -> (int -> 'a -> 'a) -> int -> 'a = <fun>
 val string_reverse_parafold : string -> string = <fun>
-processing a... 
-processing b... 
-processing c... 
-- : string = "cba"
 val unit_test_for_Question_06 :
   (string -> string) -> (string -> string -> string) -> bool = <fun>
 val make_palindrome : int -> string = <fun>
