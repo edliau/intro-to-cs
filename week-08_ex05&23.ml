@@ -60,20 +60,53 @@ let test_cartesian_product_4 candidate =
                (3, 10, 100, 300); (3, 10, 200, 300);
                (3, 20, 100, 300); (3, 20, 200, 300)])
   and b10 = (candidate [1; 2; 3] [10; 20] [100; 200] [300; 400] =
-               [(1, 10, 100, 300); (1, 10, 100, 400);
-                (1, 10, 200, 300); (1, 10, 200, 400);
-                (1, 20, 100, 300); (1, 20, 100, 400);
-                (1, 20, 200, 300); (1, 20, 200, 400);
-                (2, 10, 100, 300); (2, 10, 100, 400);
-                (2, 10, 200, 300); (2, 10, 200, 400);
-                (2, 20, 100, 300); (2, 20, 100, 400);
-                (2, 20, 200, 300); (2, 20, 200, 400);
-                (3, 10, 100, 300); (3, 10, 100, 400);
-                (3, 10, 200, 300); (3, 10, 200, 400);
-                (3, 20, 100, 300); (3, 20, 100, 400);
-                (3, 20, 200, 300); (3, 20, 200, 400)])
+              [(1, 10, 100, 300); (1, 10, 100, 400);
+               (1, 10, 200, 300); (1, 10, 200, 400);
+               (1, 20, 100, 300); (1, 20, 100, 400);
+               (1, 20, 200, 300); (1, 20, 200, 400);
+               (2, 10, 100, 300); (2, 10, 100, 400);
+               (2, 10, 200, 300); (2, 10, 200, 400);
+               (2, 20, 100, 300); (2, 20, 100, 400);
+               (2, 20, 200, 300); (2, 20, 200, 400);
+               (3, 10, 100, 300); (3, 10, 100, 400);
+               (3, 10, 200, 300); (3, 10, 200, 400);
+               (3, 20, 100, 300); (3, 20, 100, 400);
+               (3, 20, 200, 300); (3, 20, 200, 400)])
   (* etc. *)
   in b0 && b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && b10 (* etc. *);;
+
+let cartesian_product_4 vs_given ws_given xs_given ys_given =
+  let rec traverse_1 vs =
+    match vs with
+    | [] ->
+       []
+    | v :: vs' ->
+       let vs'_and_ws_given_and_xs_given_and_ys_given_with_quadtuples_prepended = traverse_1 vs'
+       in let rec traverse_2 ws =
+            match ws with
+            | [] ->
+               vs'_and_ws_given_and_xs_given_and_ys_given_with_quadtuples_prepended
+            | w :: ws' ->
+               let vs'_and_ws'_and_xs_given_and_ys_given_with_quadtuples_prepended = traverse_2 ws'
+               in let rec traverse_3 xs =
+                    match xs with
+                    | [] ->
+                       vs'_and_ws'_and_xs_given_and_ys_given_with_quadtuples_prepended
+                    | x :: xs' ->
+                       let vs'_and_ws'_and_xs'_and_ys_given_with_quadtuples_prepended = traverse_3 xs'
+                       in let rec traverse_4 ys =
+                            match ys with
+                            | [] ->
+                               vs'_and_ws'_and_xs'_and_ys_given_with_quadtuples_prepended
+                            | y :: ys' ->
+                               let vs'_and_ws'_and_xs'_and_ys'_with_quadtuples_prepended = traverse_4 ys'
+                               in (v, w, x, y) :: vs'_and_ws'_and_xs'_and_ys'_with_quadtuples_prepended
+                          in traverse_4 ys_given
+                  in traverse_3 xs_given
+          in traverse_2 ws_given
+  in traverse_1 vs_given;;
+
+let () = assert(test_cartesian_product_4 cartesian_product_4 = true);;
 
 (***********)
 
