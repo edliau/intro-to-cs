@@ -494,7 +494,10 @@ let string_andmap_rec f s =
   in visit (String.length s);;
 
 let string_andmap f s =
-  nat_parafold_right true (fun i' ih -> f (s.[i']) && ih) (String.length s);;
+  nat_parafold_right
+    true
+    (fun i' ih -> f (s.[i']) && ih)
+    (String.length s);;
 
 let () = assert (test_string_andmap string_andmap_rec = true);;
 let () = assert (test_string_andmap string_andmap = true);;
@@ -549,7 +552,10 @@ let string_ormap_rec f s =
   in visit (String.length s);;
 
 let string_ormap f s =
-  nat_parafold_right false (fun i' ih -> f (s.[i']) || ih) (String.length s);;
+  nat_parafold_right
+    false
+    (fun i' ih -> f (s.[i']) || ih)
+    (String.length s);;
 
 let () = assert (test_string_ormap string_ormap_rec = true);;
 let () = assert (test_string_ormap string_ormap = true);;
@@ -592,7 +598,8 @@ let test_string_andmapi candidate =
   and b4 = (candidate (fun i c -> digitp c) "x23" = false)
   and b5 = (candidate (fun i c -> digitp c) "1x3" = false)
   and b6 = (candidate (fun i c -> digitp c) "12x" = false)
-  and b7 = (candidate (fun i c -> digitp (char_of_int(i + int_of_char '0'))) "1234" = true)
+  and b7 = (candidate
+              (fun i c -> digitp (char_of_int(i + int_of_char '0'))) "1234" = true)
   and br = (let a = string_of_char(random_char_int())
             and b = string_of_char(random_char_int())
             and c = string_of_char(random_char_int())
@@ -609,7 +616,10 @@ let string_andmapi_rec f s =
   in visit (String.length s);;
 
 let string_andmapi f s =
-  nat_parafold_right true (fun i' ih -> (f i' s.[i']) && ih) (String.length s);;
+  nat_parafold_right
+    true
+    (fun i' ih -> (f i' s.[i']) && ih)
+    (String.length s);;
                       
 let () = assert (test_string_andmapi string_andmapi_rec = true);;
 let () = assert (test_string_andmapi string_andmapi = true);; 
@@ -632,7 +642,10 @@ let string_ormapi_rec f s =
   in visit (String.length s);;
 
 let string_ormapi f s =
-  nat_parafold_right false (fun i' ih -> (f i' s.[i']) || ih) (String.length s);;
+  nat_parafold_right
+Firs    false
+    (fun i' ih -> (f i' s.[i']) || ih)
+    (String.length s);;
 
 let () = assert (test_string_ormapi string_ormapi_rec = true);;
 let () = assert (test_string_ormapi string_ormapi = true);;
@@ -691,11 +704,8 @@ let test_check_string_map candidate =
   in b0 && b1 && b2 && b3 && b4;;
 
 let check_string_map f s r =
-  let n1 = String.length s in
-  let n2 = String.length r in
-  if n1 = n2
-  then  string_andmapi (fun i' ih ->  f (s.[i']) = ih)
-          r
+  if (String.length s) = String.length r
+  then string_andmapi (fun i c -> f (s.[i]) = c) r
   else false;;
   
 let () = assert (test_check_string_map check_string_map);;
@@ -714,8 +724,7 @@ let test_check_string_mapi candidate =
 
 let check_string_mapi f s r =
   if String.length s = String.length r
-  then string_andmapi (fun i' c -> f i' (s.[i']) = c)
-         r
+  then string_andmapi (fun i' c -> f i' (s.[i']) = c) r
   else false;;
   
 let () = assert (test_check_string_mapi check_string_mapi);;
@@ -730,8 +739,7 @@ let test_check_string_reverse candidate =
   and b2 = (candidate "ab" "ba" = true)
   and b3 = (candidate "abc" "cba" = true)
   and b4 = (candidate "abcd" "abcd" = false)
-  and b5 = (candidate "abcd" "abcx" = false)
-  (* if the length of two strings are different, they can't be reverse of each other *)
+  and b5 = (candidate "abcd" "abc" = false)
   and b6 = (let a = String.make 3 (random_char())
             and b = String.make 4 (random_char())
             in candidate a b = false)
@@ -759,10 +767,14 @@ let test_string_appendmap candidate =
   in b0 && b1 && b2;;
 
 let string_appendmap f s =
-  nat_parafold_right "" (fun i' ih -> ih ^ (f s.[i'])) (String.length s);;
+  nat_parafold_right
+    ""
+    (fun i' ih -> ih ^ (f s.[i']))
+    (String.length s);;
 
 let () = assert (test_string_appendmap string_appendmap);;
 
+(* Question 18b *)
 let test_show_string candidate =
   (candidate "" = "\"\"") &&
   (candidate "abc" = "\"abc\"") &&
@@ -785,7 +797,6 @@ let test_show_string candidate =
    # 
 *)
 
-(* Question 18b *)
 let show_string s =
   let check = 
     string_appendmap (fun c ->
@@ -825,7 +836,10 @@ let test_string_appendmapi candidate =
   in b0 && b1 && b2;;
 
 let string_appendmapi f s =
-  nat_parafold_right "" (fun i' ih -> ih ^ (f i' s.[i'])) (String.length s);;
+  nat_parafold_right
+    ""
+    (fun i' ih -> ih ^ (f i' s.[i']))
+    (String.length s);;
 
 let () = assert (test_string_appendmapi string_appendmapi = true);;
 
