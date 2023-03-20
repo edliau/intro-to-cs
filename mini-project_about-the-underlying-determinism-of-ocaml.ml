@@ -229,6 +229,32 @@ processing "pe1"...
 - : string * string = ("pe1", "pe2")
  *)
 
+(* Solution to Question 12 *)
+
+(*
+# (fun x -> 42) 23;;
+- : int = 42
+
+# (fun x -> 42) true;;
+- : int = 42
+
+# (fun x -> 42) 'a';;
+- : int = 42
+
+# (fun x -> 42) "123";;
+- : int = 42
+
+# (fun x -> 42) [];;
+- : int = 42
+
+# (fun x -> 42) y;;
+Line 1, characters 13-14:
+1 | (fun x -> 42) y;;
+                  ^
+Error: Unbound value y
+# 
+ *)
+
 (* ********** *)
 
 (*
