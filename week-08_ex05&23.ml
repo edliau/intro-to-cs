@@ -10,6 +10,7 @@ Name of the group on Canvas: Week-08_Group2
  *)
 
 (* Exercise 05 *)
+
 let test_list_stutter3_int candidate =
   let b0 = (candidate        [] =                          [])
   and b1 = (candidate       [1] =                   [1; 1; 1])
