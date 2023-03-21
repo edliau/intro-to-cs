@@ -48,8 +48,17 @@ let a_function' name f =
 # an_int 1 + an_int 100;;
 processing 100...
 processing 1...
-- : int = 101 
+- : int = 101
 
+# ((an_int 1 + an_int 2) + an_int 3) + an_int 4;;
+processing 4...
+processing 3...
+processing 2...
+processing 1...
+- : int = 10
+ *)
+
+(*
 # an_int (an_int 1 / an_int 0) + an_int 10;;
 processing 10...
 processing 0...
@@ -64,8 +73,6 @@ Exception: Division_by_zero.
 *)
 
 (* Solution to Question 02 *)
-
-let f x y = an_int (an_int 3 + an_int x) + an_int y;;
 
 (*
 # a_function f (an_int 1) (an_int 2);;
@@ -145,19 +152,21 @@ val c : int = 3
 (* Solution to Question 07 *)
 
 (*
-# let x1 = an_int 1 and x2 = an_int 2 in an_int x1 + an_int x2;;
+#  let x1 = an_int 1 and x2 = an_int 2 in (an_int x1 + an_int x2 + an_int 3);;
 processing 1...
 processing 2...
+processing 3...
 processing 2...
 processing 1...
-- : int = 3
+- : int = 6
 
-# let (x1, x2) = (an_int 1, an_int 2) in an_int x1 + an_int 2;;
+# let (x1, x2) = (an_int 1, an_int 2) in (an_int x1 + an_int 2 + an_int 3);;
 processing 2...
 processing 1...
+processing 3...
 processing 2...
 processing 1...
-- : int = 3
+- : int = 6
  *)
 
 (* Solution to Question 08 *)
@@ -231,6 +240,10 @@ processing "pe1"...
 
 (* ********** *)
 
+let end_of_file = "mini-project_about-the-underlying-determinism-of-ocaml.ml";;
+
+(* ********** *)
+
 (*
         OCaml version 4.13.1
 
@@ -248,5 +261,3 @@ val end_of_file : string =
 # 
 
  *)
-
-let end_of_file = "mini-project_about-the-underlying-determinism-of-ocaml.ml";;
