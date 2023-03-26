@@ -9,6 +9,34 @@
 Name of the group on Canvas: Week-09_Group2
  *)
  
+(* Exercise 03 *)
+let test_reverse_list candidate =
+  let b0 = (candidate (fun x -> x) [] = [])
+  and b1 = (candidate (fun x -> x) [1] = [1])
+  and b2 = (candidate (fun x -> x + 1) [1; 2] = [3; 2])
+  and b3 = (candidate (fun x -> x - 1) [1; 2; 3] = [2; 1; 0])
+  and br = (let a = Random.int 100
+            and b = Random.int 100
+            and c = Random.int 100
+            and d = Random.int 100
+            in candidate (fun x -> x) [a; b; c; d] = [d; c; b; a])
+  in b0 && b1 && b2 && b3 && br;;
+
+let reverse_list_rec f vs_given =
+     let rec visit vs =
+       match vs with
+       |[] ->
+         []
+       | v :: vs' ->
+          let v = f (List.hd vs)
+          and vs' = List.tl vs
+          in let ih = visit vs'
+             in List.append ih [v]
+     in visit vs_given;;
+
+let () = assert (test_reverse_list reverse_list_rec = true);;
+
+ 
 (* A useful function for our unit-tests *)
 let atoi n =
   let () = assert (n >= 0) in
@@ -21,6 +49,8 @@ let atoi n =
        in let ih = visit n'
           in n' :: ih
   in visit n;;
+ 
+(* ********** *)
 
 (* Exercise 04 *)
 
