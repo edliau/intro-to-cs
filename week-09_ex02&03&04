@@ -1,0 +1,50 @@
+(* week-09_ex02&03&04.ml *)
+(* Introduction to Computer Science (YSC1212), Sem2, 2022-2023 *)
+(* Olivier Danvy <danvy@yale-nus.edu.sg> *)
+(* Version of Wed 22 Mar 2023 *)
+
+(* ********** *)
+
+(*
+Name of the group on Canvas: Week-09_Group2
+ *)
+ 
+(* A useful function for our unit-tests *)
+let atoi n =
+  let () = assert (n >= 0) in
+  let rec visit n =
+    match n with
+    | 0 ->
+       []
+    | _ ->
+       let n' = n - 1
+       in let ih = visit n'
+          in n' :: ih
+  in visit n;;
+
+(* Exercise 04 *)
+
+(* A unit test for our list reversal and prepending *)
+let test_list_reverse_int candidate =
+  let b0 = (candidate [] [] = [])
+  and b1 = (candidate [0] [] = [0])
+  and b2 = (candidate [] [0] = [0])
+  and b3 = (candidate [1; 0] [] = [0; 1])
+  and b4 = (candidate [] [1; 0] = [1; 0])
+  and b5 = (candidate [2; 1; 0] [1] = [0; 1; 2; 1])
+  and b6 = (candidate [1] [2; 1; 0] = [1; 2; 1; 0])
+  and b7 = (let ns = atoi 100
+            in candidate (ns) (ns) = List.append (List.rev ns) ns)
+  (* etc. *)
+  in b0 && b1 && b2 && b3 && b4 && b5 && b6 && b7;;
+
+let list_rev_append v1s v2s =
+  List.append (List.rev v1s) v2s;;
+
+(***********)
+
+let end_of_file = "week-09_ex02&03&04.ml";;
+
+(*
+
+*)

@@ -29,6 +29,8 @@ let list_stutter3 xs_given =
        in x :: x :: x :: ih
   in visit xs_given;;
 
+let () = assert(test_list_stutter3_int list_stutter3 = true);; 
+
 (* Exercise 23 *)
 
 let test_cartesian_product_4 candidate =
@@ -105,7 +107,7 @@ let cartesian_product_4 vs_given ws_given xs_given ys_given =
                           in traverse_4 ys_given
                   in traverse_3 xs_given
           in traverse_2 ws_given
-  in traverse_1 vs_given;;
+  in traverse_1 vs_given;; 
 
 let () = assert(test_cartesian_product_4 cartesian_product_4 = true);;
 
@@ -114,6 +116,19 @@ let () = assert(test_cartesian_product_4 cartesian_product_4 = true);;
 let end_of_file = "week-08_ex05&23.ml";;
 
 (*
+        OCaml version 4.13.1
 
+# #use "week-08_ex05&23.ml";;
+val test_list_stutter3_int : (int list -> int list) -> bool = <fun>
+val list_stutter3 : 'a list -> 'a list = <fun>
+val test_cartesian_product_4 :
+  (int list ->
+   int list -> int list -> int list -> (int * int * int * int) list) ->
+  bool = <fun>
+val cartesian_product_4 :
+  'a list -> 'b list -> 'c list -> 'd list -> ('a * 'b * 'c * 'd) list =
+  <fun>
+val end_of_file : string = "week-08_ex05&23.ml"
+# 
 *)
 
