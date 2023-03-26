@@ -36,7 +36,8 @@ let reverse_list_rec f vs_given =
 
 let () = assert (test_reverse_list reverse_list_rec = true);;
 
- 
+(* ********** *)
+
 (* A useful function for our unit-tests *)
 let atoi n =
   let () = assert (n >= 0) in
@@ -50,7 +51,6 @@ let atoi n =
           in n' :: ih
   in visit n;;
  
-(* ********** *)
 
 (* Exercise 04 *)
 
