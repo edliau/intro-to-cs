@@ -68,17 +68,8 @@ let test_list_reverse_int candidate =
   (* etc. *)
   in b0 && b1 && b2 && b3 && b4 && b5 && b6 && b7;;
 
-let rev_append_list_rec v1s v2s =
-  let rec visit vs =
-    match vs with
-    |[] ->
-      []
-    | v :: vs' ->
-       let v = List.hd vs
-       and vs' = List.tl vs
-       in let ih = visit vs'
-          in List.append ih [v]
-  in List.append (visit v1s) v2s;;
+let list_rev_append v1s v2s =
+  List.append (List.rev v1s) v2s;;
 
 (***********)
 
