@@ -25,8 +25,7 @@ let list_stutter3 xs_given =
     | [] ->
        []
     | x :: xs' ->
-       let ih = visit xs'
-       in x :: x :: x :: ih
+        x :: x :: x :: visit xs'
   in visit xs_given;;
 
 let () = assert(test_list_stutter3_int list_stutter3 = true);; 

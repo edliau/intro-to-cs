@@ -5,36 +5,36 @@
 
 (* ********** *)
 
-let test_fac candidate =
+let test_fac (candidate : int -> int) : bool =
   let b0 = (candidate 0 = 1)
   and b1 = (candidate 1 = 1)
   and b2 = (candidate 2 = 2)
   and b3 = (candidate 3 = 6)
   and b4 = (candidate 4 = 24)
-  and b5 = (let n = Random.int 15
+  and b5 = (let (n : int) = Random.int 15
             in candidate (succ n)
                = succ n * candidate n)
   in b0 && b1 && b2 && b3 && b4 && b5;;
 
-let fac n =
+let fac (n : int) : int =
   assert (n >= 0);
-  let rec visit i =
+  let rec visit (i : int) : int =
     if i = 0
     then 1
     else i * visit (pred i)
   in visit n;;
 
 let () = assert (test_fac fac);;
-
+
 (* ********** *)
 
-let test_show_int candidate =
+let test_show_int (candidate : int -> string) : bool =
   let b0 = (candidate 0 = "0")
   and b1 = (candidate 123 = "123")
   and b2 = (candidate (-123) = "(-123)")
   in b0 && b1 && b2;;
 
-let show_int n =
+let show_int (n : int) : string =
   if n < 0
   then "(" ^ string_of_int n ^ ")"
   else string_of_int n;;
@@ -43,27 +43,27 @@ let () = assert (test_show_int show_int);;
 
 (* ***** *)
 
-let test_show_pair candidate =
+let test_show_pair (candidate : (int -> string) -> (int -> string) -> (int * int) -> string) : bool =
   (candidate show_int show_int (1, -1) = "(1, (-1))");;
 
-let show_pair show_v1 show_v2 (v1, v2) =
+let show_pair (show_v1 : (int -> string)) (show_v2 : (int -> string)) ((v1 : int) , (v2 : int)) =
   "(" ^ (show_v1 v1) ^ ", " ^ (show_v2 v2) ^ ")";;
 
 let () = assert (test_show_pair show_pair);;
 
 (* ********** *)
 
-let nat_fold_right zero_case succ_case n =
+let nat_fold_right (zero_case : 'a) (succ_case : ('a -> 'a)) (n : int) : 'a =
   assert (n >= 0);
-  let rec visit i =
+  let rec visit (i : int) : 'a =
     if i = 0
     then zero_case
     else succ_case (visit (pred i))    (* <-- succ_case takes one argument *)
   in visit n;;
 
-let nat_parafold_right zero_case succ_case n =
+let nat_parafold_right (zero_case : 'a) (succ_case : (int -> 'a -> 'a)) (n : int) : 'a =
   assert (n >= 0);
-  let rec visit i =
+  let rec visit (i : int) : 'a =
     if i = 0
     then zero_case
     else let i' = pred i
@@ -72,7 +72,7 @@ let nat_parafold_right zero_case succ_case n =
 
 (* ********** *)
 
-let test_evenp_and_oddp evenp_candidate oddp_candidate =
+let test_evenp_and_oddp (evenp_candidate : (int -> bool)) (oddp_candidate : (int -> bool)) : bool =
   let b0 = (evenp_candidate 0 = true)
   and b1 = (oddp_candidate 0 = false)
   and b2 = (let n' = Random.int 1000
@@ -81,12 +81,12 @@ let test_evenp_and_oddp evenp_candidate oddp_candidate =
             in oddp_candidate (succ n') = evenp_candidate n')
   in b0 && b1 && b2 && b3;;
 
-let (evenp, oddp) =
-  let rec evenp_aux n =
+let ((evenp : (int -> bool)), (oddp : (int -> bool))) =
+  let rec evenp_aux (n : int) : bool =
     if n = 0
     then true
     else oddp_aux (pred n)
-  and oddp_aux n =
+  and oddp_aux (n : int) : bool =
     if n = 0
     then false
     else evenp_aux (pred n)
@@ -101,13 +101,13 @@ let () = assert (test_evenp_and_oddp evenp oddp);;
 
 (* ********** *)
 
-let test_list_map_int candidate =
-  let f = (fun n -> 10 * n)
+let test_list_map_int (candidate : ((int -> int) -> int list -> int list)) : bool =
+  let f = (fun (n : int) -> 10 * n)
   and ns = List.init (Random.int 20) (fun _ -> if Random.bool () then Random.int 100 else - (Random.int 100))
   in candidate f ns = List.map f ns;;
 
-let list_map f xs_given =
-  let rec visit xs =
+let list_map (f : ('a -> 'b)) (xs_given : 'a list) : 'b list =
+  let rec visit (xs : 'a list) : 'b list =
     match xs with
     | [] ->
        []
@@ -119,18 +119,18 @@ let () = assert (test_list_map_int list_map);;
 
 (* ********** *)
 
-let test_list_reverse_int candidate =
+let test_list_reverse_int (candidate : (int list -> int list)) : bool =
   let b0 = (candidate [] = [])
   and b1 = (candidate [0] = [0])
   and b2 = (candidate [1; 0] = [0; 1])
   and b3 = (candidate [2; 1; 0] = [0; 1; 2])
-  and b4 = (let ns = List.init (Random.int 20) (fun _ -> if Random.bool () then Random.int 100 else - (Random.int 100))
+  and b4 = (let (ns : int list) = List.init (Random.int 20) (fun _ -> if Random.bool () then Random.int 100 else - (Random.int 100))
             in candidate (candidate ns) = ns)
   (* etc. *)
   in b0 && b1 && b2 && b3 && b4;;
 
-let list_reverse vs_given =
-  let rec visit vs a =
+let list_reverse (vs_given : 'a list) : 'a list =
+  let rec visit (vs : 'a list) (a : 'a list) : 'a list =
     match vs with
     | [] ->
        a

@@ -55,7 +55,7 @@ let atoi n =
 (* Exercise 04 *)
 
 (* A unit test for our list reversal and prepending *)
-let test_list_reverse_int candidate =
+let test_list_rev_append_int candidate =
   let b0 = (candidate [] [] = [])
   and b1 = (candidate [0] [] = [0])
   and b2 = (candidate [] [0] = [0])
@@ -80,10 +80,23 @@ let rev_append_list_rec v1s v2s =
           in List.append ih [v]
   in List.append (visit v1s) v2s;;
 
+let () = assert (test_list_rev_append_int rev_append_list_rec = true);;
+
 (***********)
 
 let end_of_file = "week-09_ex02&03&04.ml";;
 
 (*
+        OCaml version 4.13.1
 
+# #use "week-09_ex02&03&04.ml";;
+val test_reverse_list : ((int -> int) -> int list -> int list) -> bool =
+  <fun>
+val reverse_list_rec : ('a -> 'b) -> 'a list -> 'b list = <fun>
+val atoi : int -> int list = <fun>
+val test_list_rev_append_int : (int list -> int list -> int list) -> bool =
+  <fun>
+val rev_append_list_rec : 'a list -> 'a list -> 'a list = <fun>
+val end_of_file : string = "week-09_ex02&03&04.ml"
+# 
 *)
