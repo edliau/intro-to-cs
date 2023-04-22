@@ -42,6 +42,7 @@ let a_function' name f =
   let () = Printf.printf "processing the %s function...\n" name in
   fun x -> f x;;
 
+
 (* Some outputs from Question 01 *)
 
 (*
@@ -72,6 +73,7 @@ processing 1...
 Exception: Division_by_zero.
 *)
 
+
 (* Solution to Question 02 *)
 
 let f x y = an_int (an_int 3 + an_int x) + an_int y;;
@@ -90,19 +92,36 @@ processing 4...
 # 
 *)
 
+
 (* Solution to Question 03 *)
 
-(*
- # (an_int 1, an_int 2);;
-processing 2...
-processing 1...
-- : int * int = (1, 2)
-
+(* 
 # (a_bool true, a_bool false);;
 processing false...
 processing true...
 - : bool * bool = (true, false)
+
+# (an_int 1, an_int 2, an_int 3);;
+processing 3...
+processing 2...
+processing 1...
+- : int * int * int = (1, 2, 3)
+
+#  (an_int 1, (an_int 2, an_int 3), an_int 4);;
+processing 4...
+processing 3...
+processing 2...
+processing 1...
+- : int * (int * int) * int = (1, (2, 3), 4)
+
+#  (an_int 1, ((an_int 2, an_int 3), an_int 4));;
+processing 4...
+processing 3...
+processing 2...
+processing 1...
+- : int * ((int * int) * int) = (1, ((2, 3), 4))
  *)
+
 
 (* Solution to Question 04 *)
 
@@ -127,22 +146,25 @@ processing 1...
 # 
  *)
 
+
 (* Solution to Question 05 *)
 
 (*
-# a_function (fun x1 -> an_int x1 + an_int 2) (an_int 1);;
-processing 1...
+# let identity = (fun x -> x) in (a_function identity an_int 1, a_function identity (a_bool true));;
+processing true...
 processing a function...
-processing 2...
+processing a function...
 processing 1...
-- : int = 3
+- : int * bool = (1, true)
 
-# let x1 = (an_int 1) in (an_int x1 + an_int 2);;
-processing 1...
-processing 2...
-processing 1...
-- : int = 3
+# (fun identity -> (a_function identity (an_int 1), a_function identity (an_int true))) (fun x -> x);;
+Line 1, characters 78-82:
+1 | (fun identity -> (a_function identity (an_int 1), a_function identity (an_int true))) (fun x -> x);;
+                                                                                  ^^^^
+Error: This expression has type bool but an expression was expected of type
+         int
  *)
+
 
 (* Solution to Question 06 *)
 
@@ -191,25 +213,21 @@ processing "b"...
 # 
  *)
 
+
 (* Solution to Question 07 *)
 
 (*
-#  let x1 = an_int 1 and x2 = an_int 2 in (an_int x1 + an_int x2 + an_int 3);;
+# let x1 = an_int 1 and x2 = an_int 2 in x1 + x2;;
 processing 1...
 processing 2...
-processing 3...
-processing 2...
-processing 1...
-- : int = 6
+- : int = 3
 
-# let (x1, x2) = (an_int 1, an_int 2) in (an_int x1 + an_int 2 + an_int 3);;
+# let (x1, x2) = (an_int 1, an_int 2) in x1 + x2;;
 processing 2...
 processing 1...
-processing 3...
-processing 2...
-processing 1...
-- : int = 6
+- : int = 3
  *)
+
 
 (* Solution to Question 08 *)
 
@@ -232,6 +250,7 @@ processing false...
 processing false...
 - : bool = false
 *)
+
 
 (* Solution to Question 09 *)
 
@@ -261,6 +280,7 @@ processing 2...
 - : int = 2
  *)
 
+
 (* Solution to Question 10 *)
 
 (*
@@ -279,6 +299,21 @@ processing "pe2"...
 processing "pe1"...
 - : string * string = ("pe1", "pe2")
  *)
+
+
+(* Solution to Question 11 *)
+
+(*
+# let x1 = 2;;
+val x1 : int = 2
+ 
+# let x1 = 1 in let x2 = x1 in (x1, x2);;
+- : int * int = (1, 1)
+
+# let x2 = x1 in let x1 = 1 in (x1, x2);;
+- : int * int = (1, 2)
+ *)
+
 
 (* Solution to Question 12 *)
 
@@ -324,7 +359,6 @@ val a_string : string -> string = <fun>
 val a_unit : unit -> unit = <fun>
 val a_function : ('a -> 'b) -> 'a -> 'b = <fun>
 val a_function' : string -> ('a -> 'b) -> 'a -> 'b = <fun>
-val f : int -> int -> int = <fun>
 val end_of_file : string =
   "mini-project_about-the-underlying-determinism-of-ocaml.ml"
 # 
