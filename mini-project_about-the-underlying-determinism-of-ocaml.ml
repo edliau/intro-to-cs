@@ -76,8 +76,6 @@ Exception: Division_by_zero.
 
 (* Solution to Question 02 *)
 
-let f x y = an_int (an_int 3 + an_int x) + an_int y;;
-
 (*
 #  a_function'("outer") ((a_function' ("inner") f) (an_int 1)) (an_int 2);;
 processing 2...
@@ -284,17 +282,26 @@ processing 2...
 (* Solution to Question 10 *)
 
 (*
-# let x1 = a_string "pe2";;
-processing "pe2"...
-val x1 : string = "pe2"
+# let x1 = (an_int 1) and x2 = (an_int 2) in (x1, x2);;
+processing 1...
+processing 2...
+- : int * int = (1, 2)
 
-# let x1 = (a_string "pe1") in let x2 = x1 in (x1, x2);;
-processing "pe1"...
-- : string * string = ("pe1", "pe1")
+# let x2 = (an_int 2) and x1 = (an_int 1) in (x1, x2);;
+processing 2...
+processing 1...
+- : int * int = (1, 2)
 
-# let x2 = x1 in let x1 = (a_string "pe1") in (x1, x2);;
-processing "pe1"...
-- : string * string = ("pe1", "pe2")
+# let x1 = (an_int 1) in let x2 = (an_int 2) in (x1, x2);;
+processing 1...
+processing 2...
+- : int * int = (1, 2)
+
+# let x2 = (an_int 2) in let x1 = (an_int 1) in (x1, x2);;
+processing 2...
+processing 1...
+- : int * int = (1, 2)
+# 
  *)
 
 
